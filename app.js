@@ -7,8 +7,15 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
+// CORS CONFIG (IMPORTANT FOR DEPLOYMENT)
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true
+  })
+);
+
 // Middleware
-app.use(cors());
 app.use(express.json());
 
 // DB Connection

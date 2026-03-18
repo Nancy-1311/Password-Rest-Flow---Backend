@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const nodemailer = require("nodemailer");
 
-// 📌 Email Transporter (Production Ready)
+//  Email Transporter (Production Ready)
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
@@ -14,31 +14,55 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// ✅ FORGOT PASSWORD
+// REGISTER USER
+exports.registerUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const user = new User({
+      email,
+      password: hashedPassword
+    });
+
+    await user.save();
+
+    res.status(201).json({ message: "User registered successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//  FORGOT PASSWORD
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    // Check if user exists
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Generate random token
     const token = crypto.randomBytes(32).toString("hex");
 
-    // Save token + expiry (10 mins)
     user.resetToken = token;
     user.resetTokenExpiry = Date.now() + 10 * 60 * 1000;
 
     await user.save();
 
-    // 🔗 IMPORTANT: Replace with your deployed frontend URL
     const resetLink = `${process.env.CLIENT_URL}/reset-password/${token}`;
 
-    // Send Email
     await transporter.sendMail({
       to: email,
       subject: "Password Reset",
@@ -56,7 +80,7 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-// ✅ VERIFY TOKEN
+//  VERIFY TOKEN
 exports.verifyToken = async (req, res) => {
   try {
     const { token } = req.params;
@@ -79,7 +103,7 @@ exports.verifyToken = async (req, res) => {
   }
 };
 
-// ✅ RESET PASSWORD
+//  RESET PASSWORD
 exports.resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
@@ -96,13 +120,9 @@ exports.resetPassword = async (req, res) => {
       });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Update password
     user.password = hashedPassword;
-
-    // Clear token
     user.resetToken = undefined;
     user.resetTokenExpiry = undefined;
 
