@@ -35,8 +35,7 @@ exports.forgotPassword = async (req, res) => {
 
     await user.save();
 
-    // IMPORTANT: Replace with your deployed frontend URL
-    const resetLink = `${process.env.CLIENT_URL}/reset-password/${token}`;
+    const resetLink = `${process.env.https://password-rest-flow-frontend.vercel.app/}/reset-password/${token}`;
 
     // Send Email
     await transporter.sendMail({
