@@ -14,6 +14,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+<<<<<<< HEAD
 // REGISTER USER
 exports.registerUser = async (req, res) => {
   try {
@@ -43,6 +44,8 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+=======
+>>>>>>> 4617dc22722364d53cc648f70c3ea164e52f39f3
 //  FORGOT PASSWORD
 exports.forgotPassword = async (req, res) => {
   try {
@@ -61,7 +64,11 @@ exports.forgotPassword = async (req, res) => {
 
     await user.save();
 
+<<<<<<< HEAD
     const resetLink = `${process.env.CLIENT_URL}/reset-password/${token}`;
+=======
+    const resetLink = `${process.env.https://password-rest-flow-frontend.vercel.app/}/reset-password/${token}`;
+>>>>>>> 4617dc22722364d53cc648f70c3ea164e52f39f3
 
     await transporter.sendMail({
       to: email,
@@ -103,7 +110,11 @@ exports.verifyToken = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 //  RESET PASSWORD
+=======
+// RESET PASSWORD
+>>>>>>> 4617dc22722364d53cc648f70c3ea164e52f39f3
 exports.resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
