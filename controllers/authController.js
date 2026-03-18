@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const nodemailer = require("nodemailer");
 
-// 📌 Email Transporter (Production Ready)
+//  Email Transporter (Production Ready)
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// ✅ FORGOT PASSWORD
+//  FORGOT PASSWORD
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -35,7 +35,7 @@ exports.forgotPassword = async (req, res) => {
 
     await user.save();
 
-    // 🔗 IMPORTANT: Replace with your deployed frontend URL
+    // IMPORTANT: Replace with your deployed frontend URL
     const resetLink = `${process.env.CLIENT_URL}/reset-password/${token}`;
 
     // Send Email
@@ -56,7 +56,7 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-// ✅ VERIFY TOKEN
+//  VERIFY TOKEN
 exports.verifyToken = async (req, res) => {
   try {
     const { token } = req.params;
@@ -79,7 +79,7 @@ exports.verifyToken = async (req, res) => {
   }
 };
 
-// ✅ RESET PASSWORD
+// RESET PASSWORD
 exports.resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
